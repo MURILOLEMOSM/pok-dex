@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pokédex · acervo de TI</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#0a0c0b;
+  --bg2:#0f1211;
+  --surface:#141817;
+  --surface2:#1b201e;
+  --line:#262c29;
+  --txt:#e9ede9;
+  --muted:#7d857f;
+  --lime:#c9f24d;
+  --lime-dim:#9bbf3a;
+  --cyan:#4de2e2;
+  --pink:#ff5c8a;
+  --red:#ff5b47;
+  --amber:#ffb648;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'Bricolage Grotesque',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(rgba(201,242,77,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,242,77,.025) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* HEADER */
+header{
+  padding:26px 20px 18px;
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,rgba(10,12,11,.97),rgba(10,12,11,.86));
+  backdrop-filter:blur(12px);
+}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1200px;margin:0 auto}
+.logo{display:flex;align-items:baseline;gap:10px}
+.logo h1{
+  font-size:clamp(28px,7vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1;
+  background:linear-gradient(120deg,var(--lime),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 14px var(--lime);align-self:center;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tag{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+.adminbtn{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;
+  background:transparent;color:var(--muted);border:1px solid var(--line);
+  padding:8px 12px;border-radius:8px;cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.adminbtn:hover{color:var(--txt);border-color:var(--lime-dim)}
+.adminbtn.on{background:var(--lime);color:#0a0c0b;border-color:var(--lime);font-weight:700}
+
+.searchwrap{max-width:1200px;margin:16px auto 0;position:relative}
+.searchwrap input{
+  width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:13px 16px 13px 42px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:14px;
+}
+.searchwrap input:focus{outline:none;border-color:var(--lime-dim)}
+.searchwrap .ic{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px}
+
+/* FILTERS */
+.filters{max-width:1200px;margin:14px auto 0;padding:0 20px;display:flex;flex-direction:column;gap:10px}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chiprow .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-right:4px}
+.chip{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  padding:6px 12px;border-radius:20px;cursor:pointer;transition:.15s;
+}
+.chip:hover{color:var(--txt);border-color:var(--lime-dim)}
+.chip.active{background:var(--lime);color:#0a0c0b;border-color:var(--lime);font-weight:700}
+.chip.tp.active{background:var(--cyan);border-color:var(--cyan)}
+
+.count{max-width:1200px;margin:16px auto 0;padding:0 20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em}
+
+/* GRID */
+.grid{
+  max-width:1200px;margin:12px auto 120px;padding:0 20px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;
+}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  display:flex;flex-direction:column;transition:.22s;animation:rise .5s both;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--lime-dim);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.thumb{
+  aspect-ratio:16/10;position:relative;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 120% at 50% 0%,var(--surface2),#0c0f0e);
+  border-bottom:1px solid var(--line);overflow:hidden;
+}
+.thumb .play{width:50px;height:50px;border-radius:50%;background:rgba(201,242,77,.12);border:1px solid var(--lime-dim);display:flex;align-items:center;justify-content:center;color:var(--lime);font-size:18px;transition:.2s}
+.card:hover .thumb .play{background:var(--lime);color:#0a0c0b;transform:scale(1.08)}
+.thumb.book{background:linear-gradient(150deg,#1a1410,#0e0c0a)}
+.thumb.book .bk{font-size:34px;filter:grayscale(.2)}
+.pf{position:absolute;top:10px;left:10px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;padding:4px 8px;border-radius:6px;text-transform:uppercase}
+.pf.tiktok{background:#111;color:var(--cyan);border:1px solid #2a3a3a}
+.pf.youtube{background:#111;color:var(--red);border:1px solid #3a2a2a}
+.pf.instagram{background:#111;color:var(--pink);border:1px solid #3a2a30}
+.pf.livro{background:#111;color:var(--amber);border:1px solid #3a3020}
+.free{position:absolute;top:10px;right:10px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:4px 7px;border-radius:6px;letter-spacing:.05em}
+.free.g{background:rgba(201,242,77,.14);color:var(--lime);border:1px solid var(--lime-dim)}
+.free.p{background:rgba(255,182,72,.12);color:var(--amber);border:1px solid #4a3a1a}
+.body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.body h3{font-size:15px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.body .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.area{align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--lime-dim);border:1px solid var(--line);padding:3px 8px;border-radius:6px;letter-spacing:.04em}
+.area.none{color:var(--muted);border-style:dashed}
+.actions{margin-top:auto;display:flex;gap:8px;padding-top:4px}
+.btn{
+  flex:1;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;
+  padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--surface2);color:var(--txt);
+  cursor:pointer;transition:.15s;text-align:center;text-decoration:none;display:block;
+}
+.btn:hover{border-color:var(--lime);color:var(--lime)}
+.btn.rm{flex:0 0 auto;padding:9px 11px;color:var(--red);border-color:#3a2523}
+.btn.rm:hover{background:var(--red);color:#0a0c0b;border-color:var(--red)}
+.btn.ed{flex:0 0 auto;padding:9px 11px;color:var(--cyan);border-color:#23403f}
+.btn.ed:hover{background:var(--cyan);color:#0a0c0b;border-color:var(--cyan)}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:22px;right:22px;z-index:50;
+  background:var(--lime);color:#0a0c0b;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;
+  border:none;border-radius:14px;padding:14px 20px;cursor:pointer;box-shadow:0 8px 30px rgba(201,242,77,.3);
+  transition:.2s;display:flex;align-items:center;gap:8px;
+}
+.fab:hover{transform:translateY(-2px) scale(1.02)}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(4,6,5,.78);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;padding:0}
+.overlay.show{display:flex}
+.sheet{
+  background:var(--bg2);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;
+  width:100%;max-width:560px;padding:24px 20px 30px;animation:slideup .3s ease;
+}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.sheet .hint{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.field input,.field select{
+  width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:14px;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--lime-dim)}
+.seg{display:flex;gap:8px}
+.seg .chip{flex:1;text-align:center}
+.submit{width:100%;margin-top:8px;background:var(--lime);color:#0a0c0b;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;border:none;border-radius:12px;padding:15px;cursor:pointer;transition:.2s}
+.submit:hover{filter:brightness(1.08)}
+.moreBtn{width:100%;margin-top:10px;background:transparent;border:1px dashed var(--line);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;padding:11px;border-radius:10px;cursor:pointer;transition:.15s}
+.moreBtn:hover{color:var(--txt);border-color:var(--lime-dim)}
+.bigurl input{font-size:15px !important;padding:15px 16px !important}
+.close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--muted);font-size:26px;cursor:pointer}
+.okmsg{background:rgba(201,242,77,.1);border:1px solid var(--lime-dim);border-radius:12px;padding:16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--lime);line-height:1.5}
+
+/* ADMIN QUEUE */
+.queue{max-width:1200px;margin:0 auto 20px;padding:0 20px;display:none}
+.queue.show{display:block}
+.qhead{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);letter-spacing:.08em;text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.qitem{background:var(--surface);border:1px solid #33301a;border-left:3px solid var(--amber);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.qitem .qi{flex:1;min-width:180px}
+.qitem .qi h4{font-size:14px;font-weight:600}
+.qitem .qi span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);word-break:break-all}
+.qbtn{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:9px 15px;border-radius:9px;cursor:pointer;border:1px solid}
+.qbtn.ok{background:var(--lime);color:#0a0c0b;border-color:var(--lime)}
+.qbtn.no{background:transparent;color:var(--red);border-color:#3a2523}
+.qbtn.no:hover{background:var(--red);color:#0a0c0b}
+.empty{text-align:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:13px;padding:60px 20px}
+.banner{max-width:1200px;margin:14px auto 0;padding:12px 16px;background:rgba(77,226,226,.07);border:1px solid #24403f;border-radius:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#9fd6d6;line-height:1.6}
+.banner.admin{background:rgba(255,182,72,.07);border-color:#3a3018;color:#e6c98a}
+.thumb.repo{background:linear-gradient(150deg,#16181c,#0b0c0e)}
+.thumb.repo .gh{font-size:38px;color:#c9d1d9}
+.pf.github{background:#111;color:#c9d1d9;border:1px solid #30363d}
+.pf.linktree{background:#111;color:#43e660;border:1px solid #1f4a2a}
+.thumb.perfil{background:linear-gradient(150deg,#10201a,#0a0f0c)}
+.thumb.perfil .pg{font-size:40px}
+.repoOv{position:fixed;inset:0;z-index:70;background:rgba(4,6,5,.85);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+.repoOv.show{display:flex}
+.repoSheet{background:var(--bg2);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:88vh;display:flex;flex-direction:column;animation:slideup .3s ease;position:relative}
+.repoTop{padding:22px 20px 14px;border-bottom:1px solid var(--line)}
+.repoTop h2{font-size:20px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;word-break:break-word}
+.repoMeta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;display:flex;gap:16px;flex-wrap:wrap}
+.repoMeta b{color:var(--lime)}
+.repoDesc{font-size:13.5px;color:var(--txt);margin-top:11px;line-height:1.55}
+.crumb{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);padding:12px 20px 6px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.crumb a{color:var(--cyan);cursor:pointer;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.repoList{overflow-y:auto;padding:4px 12px 26px;flex:1}
+.rrow{display:flex;align-items:center;gap:11px;padding:12px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;transition:.12s;color:var(--txt);text-decoration:none}
+.rrow:hover{background:var(--surface)}
+.rrow .ri{font-size:14px;width:18px;text-align:center}
+.rrow.dir .ri{color:var(--cyan)}
+.rrow.file .ri{color:var(--muted)}
+.rrow .rl{flex:1;word-break:break-all}
+.loading{text-align:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:13px;padding:44px 20px;line-height:1.6}
+.repoClose{position:absolute;top:15px;right:18px;background:none;border:none;color:var(--muted);font-size:28px;cursor:pointer;z-index:3}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brandrow">
+    <div class="logo">
+      <span class="dot"></span>
+      <h1>pokédex</h1>
+    </div>
+    <button class="adminbtn" id="adminToggle" onclick="toggleAdmin()">◐ modo admin</button>
+  </div>
+  <div class="tag mono" style="max-width:1200px;margin:6px auto 0">acervo aberto de conteúdo de TI · vídeos & livros</div>
+  <div class="searchwrap">
+    <span class="ic">⌕</span>
+    <input id="search" placeholder="buscar no acervo..." oninput="render()">
+  </div>
+</header>
+
+<div class="banner" id="banner">preview: os embeds do TikTok tocam quando o site estiver hospedado de verdade. aqui, "assistir" abre o vídeo no app do TikTok.</div>
+<div class="banner admin" id="bannerAdmin" style="display:none">modo admin ativo — você vê a fila de aprovação e pode remover qualquer item já publicado.<br><button id="importBtn" onclick="importarLote()" style="margin-top:10px;background:var(--lime);color:#0a0c0b;border:none;border-radius:9px;padding:9px 14px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;cursor:pointer">＋ importar meus vídeos do TikTok</button></div>
+
+<div class="filters">
+  <div class="chiprow" id="tipoRow">
+    <span class="lbl">tipo</span>
+    <button class="chip tp active" data-tipo="tudo" onclick="setTipo(this,'tudo')">tudo</button>
+    <button class="chip tp" data-tipo="video" onclick="setTipo(this,'video')">vídeos</button>
+    <button class="chip tp" data-tipo="livro" onclick="setTipo(this,'livro')">livros</button>
+    <button class="chip tp" data-tipo="repo" onclick="setTipo(this,'repo')">repos</button>
+    <button class="chip tp" data-tipo="perfil" onclick="setTipo(this,'perfil')">perfis</button>
+  </div>
+  <div class="chiprow" id="areaRow">
+    <span class="lbl">área</span>
+  </div>
+</div>
+
+<div class="count mono" id="count"></div>
+
+<div class="queue" id="queue"></div>
+
+<div class="grid" id="grid"></div>
+
+<button class="fab" onclick="openModal()">＋ adicionar</button>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="sheet" style="position:relative">
+    <button class="close" onclick="closeModal()">×</button>
+    <div id="formBox">
+      <h2>Achou um conteúdo bom de TI?</h2>
+      <p class="hint mono">qualquer pessoa pode adicionar — é só colar o link. entra na fila e aparece depois de aprovado.</p>
+      <div class="field bigurl">
+        <label>link do vídeo ou livro</label>
+        <input id="fUrl" placeholder="cole aqui — TikTok, YouTube, Instagram...">
+      </div>
+      <button class="submit" onclick="submitItem()">enviar →</button>
+      <button class="moreBtn" onclick="toggleDetalhes()" id="moreBtn">＋ dar um título e escolher a área (opcional)</button>
+      <div id="detalhes" style="display:none;margin-top:16px">
+        <div class="field">
+          <label>título · opcional</label>
+          <input id="fTitle" placeholder="ex: 3 comandos Git essenciais">
+        </div>
+        <div class="field">
+          <label>tipo</label>
+          <div class="seg">
+            <button class="chip active" data-ft="video" onclick="setFt(this,'video')">vídeo</button>
+            <button class="chip" data-ft="livro" onclick="setFt(this,'livro')">livro</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>área · opcional</label>
+          <select id="fArea"></select>
+        </div>
+      </div>
+    </div>
+    <div id="okBox" style="display:none">
+      <div class="okmsg">✓ enviado!<br>seu conteúdo está na fila de aprovação.<br>assim que um moderador aprovar, ele aparece no acervo.</div>
+      <button class="submit" style="margin-top:16px" onclick="closeModal()">fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="repoOv" id="repoOv" onclick="if(event.target===this)closeRepo()">
+  <div class="repoSheet">
+    <button class="repoClose" onclick="closeRepo()">×</button>
+    <div class="repoTop" id="repoTop"></div>
+    <div class="crumb" id="crumb"></div>
+    <div class="repoList" id="repoList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="editOv" onclick="if(event.target===this)closeEdit()">
+  <div class="sheet" style="position:relative">
+    <button class="close" onclick="closeEdit()">×</button>
+    <h2>Editar item</h2>
+    <p class="hint mono">ajuste o título, o tipo e a área.</p>
+    <div class="field"><label>título</label><input id="eTitle"></div>
+    <div class="field"><label>tipo</label>
+      <div class="seg">
+        <button class="chip" data-et="video" onclick="setEt(this,'video')">vídeo</button>
+        <button class="chip" data-et="livro" onclick="setEt(this,'livro')">livro</button>
+        <button class="chip" data-et="repo" onclick="setEt(this,'repo')">repo</button>
+        <button class="chip" data-et="perfil" onclick="setEt(this,'perfil')">perfil</button>
+      </div>
+    </div>
+    <div class="field"><label>área</label><select id="eArea"></select></div>
+    <button class="submit" onclick="salvarEdicao()">salvar →</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  FIREBASE — cole aqui as credenciais do SEU projeto.
+//  Onde achar: console.firebase.google.com → seu projeto →
+//  ⚙ Configurações do projeto → "Seus apps" → app Web → firebaseConfig
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyBs20Hio1lPduXVmKDglV8Nq1PfmYCGSYw",
+  authDomain: "pokedex-ee996.firebaseapp.com",
+  projectId: "pokedex-ee996",
+  storageBucket: "pokedex-ee996.firebasestorage.app",
+  messagingSenderId: "794712636141",
+  appId: "1:794712636141:web:d0f1a9e560932588bceae4"
+};
+const EMAIL_ADMIN = "mulemosms@gmail.com"; // seu e-mail de administrador (o mesmo que criar no Firebase Auth)
+
+// Enquanto o config acima estiver vazio, o site roda em MODO DEMONSTRAÇÃO
+// (dados só no navegador). Assim que você preencher, ele conecta no Firebase sozinho.
+const USA_FIREBASE = !!(firebaseConfig.apiKey && firebaseConfig.projectId);
+let fb = null, adminLogado = false;
+
+const AREAS=['Fundamentos','Front-end','Back-end','Mobile','DevOps','IA & Dados','Segurança','Carreira'];
+
+// --- vídeos reais enviados (links TikTok). título/área são placeholders editáveis ---
+const codes=["ZS4peenJR","ZS4peL2s9","ZS4peNEha","ZS4pJwCf7","ZS4peFjdu","ZS4pJwXpb","ZS4pejttx","ZS4pe6LCd","ZS4peFA8r","ZS4pehFsn","ZS4perSqB","ZS4peJqDk","ZS4pJK6RE","ZS4pJoT2h","ZS4pJE6TR","ZS4pednKw","ZS4pe8kFq","ZS4peju8G","ZS4peeNNk","ZS4pJcLgp","ZS4pedn82","ZS4pee33V","ZS4pe6Va6","ZS4pedPcB","ZS4pJTxNE","ZS4pekC9h","ZS4pee6BB","ZS4peXTfe","ZS4peqdf6","ZS4pes3yJ","ZS4pegV9n","ZS4peUnmx","ZS4peVxBs","ZS4peS7oq","ZS4peUCSq","ZS4pes6ub","ZS4pefPNm","ZS4peAR7a","ZS4peDPLv","ZS4pexAqr","ZS4pes7sJ","ZS4peypv7","ZS4peucpE","ZS4pemb5v","ZS4pegS3T","ZS4peBM9X","ZS4peDRpQ","ZS4pegLnU","ZS4pePTrD","ZS4pemF2t","ZS4pe5vTR","ZS4pes6MQ","ZS4pe5XnJ","ZS4peb1H8","ZS4peUwBW","ZS4peGDrf","ZS4pdNj3h","ZS4pdJURT","ZS4pe3xgQ"];
+
+// pra demo dos filtros: algumas áreas de exemplo; o resto fica "sem categoria"
+const demoAreas=[1,2,0,3,4,2,1,5,0,6,2,1,3,4,0];
+let idc=0;
+const videos=codes.map((c,i)=>({
+  id:'v'+(idc++),
+  tipo:'video',
+  plataforma:'tiktok',
+  url:'https://vt.tiktok.com/'+c+'/',
+  titulo:'Vídeo de programação',
+  area: i<demoAreas.length ? AREAS[demoAreas[i]] : null
+}));
+
+// --- livros: caminho legítimo (gratuitos com leitura oficial + pagos linkando compra) ---
+const livros=[
+  {id:'b1',tipo:'livro',plataforma:'livro',titulo:'Eloquent JavaScript',autor:'Marijn Haverbeke',area:'Front-end',gratis:true,url:'https://eloquentjavascript.net/'},
+  {id:'b2',tipo:'livro',plataforma:'livro',titulo:'Pro Git',autor:'Chacon & Straub',area:'DevOps',gratis:true,url:'https://git-scm.com/book/pt-br/v2'},
+  {id:'b3',tipo:'livro',plataforma:'livro',titulo:'The Rust Programming Language',autor:'Klabnik & Nichols',area:'Back-end',gratis:true,url:'https://doc.rust-lang.org/book/'},
+  {id:'b4',tipo:'livro',plataforma:'livro',titulo:'Automate the Boring Stuff',autor:'Al Sweigart',area:'Fundamentos',gratis:true,url:'https://automatetheboringstuff.com/'},
+  {id:'b5',tipo:'livro',plataforma:'livro',titulo:'You Don\'t Know JS Yet',autor:'Kyle Simpson',area:'Front-end',gratis:true,url:'https://github.com/getify/You-Dont-Know-JS'},
+  {id:'b6',tipo:'livro',plataforma:'livro',titulo:'Código Limpo',autor:'Robert C. Martin',area:'Carreira',gratis:false,url:'https://www.google.com/search?q=c%C3%B3digo+limpo+robert+martin+comprar'},
+];
+
+// --- repositórios do GitHub: catalogados via API pública (código/projetos open source) ---
+const repos=[
+  {id:'r1',tipo:'repo',plataforma:'github',titulo:'developer-roadmap',autor:'kamranahmedse',area:'Carreira',url:'https://github.com/kamranahmedse/developer-roadmap'},
+  {id:'r2',tipo:'repo',plataforma:'github',titulo:'public-apis',autor:'public-apis',area:'Back-end',url:'https://github.com/public-apis/public-apis'},
+];
+
+let itens=[...videos,...repos,...livros];
+let pendentes=[
+  {id:'p1',tipo:'video',plataforma:'youtube',url:'https://youtube.com/watch?v=exemplo',titulo:'Entendendo APIs REST em 10 min',area:'Back-end'}
+];
+
+let state={tipo:'tudo',area:'todas',admin:false,ft:'video'};
+
+// build area chips + select
+const areaRow=document.getElementById('areaRow');
+const allChip=document.createElement('button');
+allChip.className='chip active';allChip.textContent='todas';allChip.onclick=()=>setArea(allChip,'todas');
+areaRow.appendChild(allChip);
+AREAS.forEach(a=>{
+  const b=document.createElement('button');b.className='chip';b.textContent=a;b.onclick=()=>setArea(b,a);
+  areaRow.appendChild(b);
+});
+const sel=document.getElementById('fArea');
+const o0=document.createElement('option');o0.value='';o0.textContent='— deixar pra depois —';sel.appendChild(o0);
+AREAS.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+const eSel=document.getElementById('eArea');
+const eo0=document.createElement('option');eo0.value='';eo0.textContent='— sem área —';eSel.appendChild(eo0);
+AREAS.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;eSel.appendChild(o);});
+
+function setTipo(el,t){document.querySelectorAll('#tipoRow .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');state.tipo=t;render();}
+function setArea(el,a){document.querySelectorAll('#areaRow .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');state.area=a;render();}
+function setFt(el,t){document.querySelectorAll('.seg .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');state.ft=t;}
+
+async function toggleAdmin(){
+  if(USA_FIREBASE&&fb){
+    if(!state.admin){
+      if(!adminLogado){
+        const email=prompt('E-mail de administrador:');if(!email)return;
+        const senha=prompt('Senha:');if(!senha)return;
+        try{await fb.au.signInWithEmailAndPassword(fb.auth,email,senha);}
+        catch(e){alert('Login falhou: '+e.message);return;}
+      }
+    }else{
+      try{await fb.au.signOut(fb.auth);}catch(e){}
+      if(fb._unsub){fb._unsub();fb._unsub=null;}
+      pendentes=[];
+    }
+  }
+  state.admin=!state.admin;
+  document.getElementById('adminToggle').classList.toggle('on',state.admin);
+  document.getElementById('queue').classList.toggle('show',state.admin);
+  document.getElementById('banner').style.display=state.admin?'none':'block';
+  document.getElementById('bannerAdmin').style.display=state.admin?'block':'none';
+  renderQueue();render();
+}
+
+function pfLabel(p){return p;}
+function cardHTML(it){
+  const areaTag=it.area?`<span class="area">${it.area}</span>`:`<span class="area none">sem categoria</span>`;
+  const rm=state.admin?`<button class="btn rm" onclick="remove('${it.id}')">🗑</button>`:'';
+  const ed=state.admin?`<button class="btn ed" onclick="editarItem('${it.id}')">✏️</button>`:'';
+  let thumb,sub,mainBtn;
+  if(it.tipo==='livro'){
+    thumb=`<div class="thumb book"><span class="bk">📘</span><span class="pf livro">livro</span>${it.gratis?'<span class="free g">grátis</span>':'<span class="free p">à venda</span>'}</div>`;
+    sub=it.autor;
+    mainBtn=`<a class="btn" href="${it.url}" target="_blank" rel="noopener">${it.gratis?'ler grátis →':'ver / comprar →'}</a>`;
+  }else if(it.tipo==='repo'){
+    thumb=`<div class="thumb repo"><span class="gh">◈</span><span class="pf github">github</span></div>`;
+    sub=it.autor?('por '+it.autor):'repositório';
+    mainBtn=`<button class="btn" onclick="openRepo('${it.url}')">explorar conteúdo →</button>`;
+  }else if(it.tipo==='perfil'){
+    thumb=`<div class="thumb perfil"><span class="pg">🔗</span><span class="pf linktree">${it.plataforma||'perfil'}</span></div>`;
+    sub='criador de conteúdo';
+    mainBtn=`<a class="btn" href="${it.url}" target="_blank" rel="noopener">abrir perfil →</a>`;
+  }else{
+    thumb=`<div class="thumb"><span class="play">▶</span><span class="pf ${it.plataforma}">${it.plataforma}</span></div>`;
+    sub='toque em assistir';
+    mainBtn=`<a class="btn" href="${it.url}" target="_blank" rel="noopener">assistir →</a>`;
+  }
+  return `<div class="card">${thumb}<div class="body"><h3>${it.titulo}</h3><span class="sub mono">${sub}</span>${areaTag}<div class="actions">${mainBtn}${ed}${rm}</div></div></div>`;
+}
+
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let list=itens.filter(it=>{
+    if(state.tipo!=='tudo'&&it.tipo!==state.tipo)return false;
+    if(state.area!=='todas'&&it.area!==state.area)return false;
+    if(q&&!(it.titulo.toLowerCase().includes(q)||(it.autor||'').toLowerCase().includes(q)||(it.area||'').toLowerCase().includes(q)))return false;
+    return true;
+  });
+  const grid=document.getElementById('grid');
+  document.getElementById('count').textContent=`${list.length} ${list.length===1?'item':'itens'} no acervo`;
+  if(list.length===0){grid.innerHTML=`<div class="empty" style="grid-column:1/-1">nada encontrado com esses filtros.</div>`;return;}
+  grid.innerHTML=list.map((it,i)=>cardHTML(it)).join('');
+  document.querySelectorAll('.card').forEach((c,i)=>c.style.animationDelay=(i*22)+'ms');
+}
+
+function renderQueue(){
+  const q=document.getElementById('queue');
+  if(pendentes.length===0){q.innerHTML=`<div class="qhead">⏳ fila de aprovação</div><div class="empty" style="padding:24px">nenhum item pendente.</div>`;return;}
+  q.innerHTML=`<div class="qhead">⏳ fila de aprovação · ${pendentes.length}</div>`+pendentes.map(p=>`
+    <div class="qitem">
+      <span class="pf ${p.plataforma}" style="position:static">${p.plataforma}</span>
+      <div class="qi"><h4>${p.titulo}</h4><span>${p.url} · ${p.area||'sem área'}</span></div>
+      <button class="qbtn ok" onclick="approve('${p.id}')">✓ aprovar</button>
+      <button class="qbtn no" onclick="reject('${p.id}')">✕ recusar</button>
+    </div>`).join('');
+}
+
+function approve(id){
+  if(USA_FIREBASE&&fb){fb.fs.updateDoc(fb.fs.doc(fb.db,'conteudos',id),{status:'aprovado'}).catch(e=>alert(e.message));return;}
+  const p=pendentes.find(x=>x.id===id);if(!p)return;pendentes=pendentes.filter(x=>x.id!==id);itens.unshift(p);renderQueue();render();
+}
+function reject(id){
+  if(USA_FIREBASE&&fb){fb.fs.deleteDoc(fb.fs.doc(fb.db,'conteudos',id)).catch(e=>alert(e.message));return;}
+  pendentes=pendentes.filter(x=>x.id!==id);renderQueue();
+}
+function remove(id){
+  if(USA_FIREBASE&&fb){fb.fs.deleteDoc(fb.fs.doc(fb.db,'conteudos',id)).catch(e=>alert(e.message));return;}
+  itens=itens.filter(x=>x.id!==id);render();
+}
+
+function toggleDetalhes(){
+  const d=document.getElementById('detalhes');const open=d.style.display!=='none';
+  d.style.display=open?'none':'block';
+  document.getElementById('moreBtn').textContent=open?'＋ dar um título e escolher a área (opcional)':'− esconder detalhes';
+}
+function openModal(){document.getElementById('overlay').classList.add('show');document.getElementById('formBox').style.display='block';document.getElementById('okBox').style.display='none';}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('fUrl').value='';document.getElementById('fTitle').value='';
+  document.getElementById('detalhes').style.display='none';
+  document.getElementById('moreBtn').textContent='＋ dar um título e escolher a área (opcional)';
+}
+function submitItem(){
+  const url=document.getElementById('fUrl').value.trim();
+  const title=document.getElementById('fTitle').value.trim()||'Sem título — a definir';
+  if(!url){document.getElementById('fUrl').style.borderColor='var(--red)';return;}
+  // detecta plataforma e tipo pelo próprio link — quem envia não precisa escolher nada
+  let pf=state.ft==='livro'?'livro':'tiktok', tp=state.ft;
+  if(/github\.com/.test(url)){pf='github';tp='repo';}
+  else if(/linktr\.ee|beacons\.ai|bio\.link|lnk\.bio/.test(url)){pf='linktree';tp='perfil';}
+  else if(/youtu/.test(url)){pf='youtube';tp='video';}
+  else if(/instagram/.test(url)){pf='instagram';tp='video';}
+  else if(/tiktok/.test(url)){pf='tiktok';tp='video';}
+  const obj={tipo:tp,plataforma:pf,url,titulo:title,area:document.getElementById('fArea').value||null,status:'pendente',criadoEm:Date.now()};
+  if(USA_FIREBASE&&fb){
+    fb.fs.addDoc(fb.fs.collection(fb.db,'conteudos'),obj).catch(e=>alert('Erro ao enviar: '+e.message));
+  }else{
+    pendentes.unshift({id:'p'+Date.now(),...obj});
+    renderQueue();
+  }
+  document.getElementById('formBox').style.display='none';
+  document.getElementById('okBox').style.display='block';
+}
+
+// --- explorador de repositório via API pública do GitHub ---
+let curRepo=null;
+function parseRepo(url){const m=url.match(/github\.com\/([^\/]+)\/([^\/#?]+)/);return m?{owner:m[1],repo:m[2].replace(/\.git$/,'')}:null;}
+async function openRepo(url){
+  const r=parseRepo(url);if(!r)return;
+  curRepo=r;
+  document.getElementById('repoOv').classList.add('show');
+  document.getElementById('repoTop').innerHTML='<div class="loading">carregando repositório...</div>';
+  document.getElementById('crumb').innerHTML='';document.getElementById('repoList').innerHTML='';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${r.owner}/${r.repo}`);
+    if(!res.ok)throw new Error();
+    const d=await res.json();
+    document.getElementById('repoTop').innerHTML=`
+      <h2><span style="color:#c9d1d9">◈</span> ${d.name}</h2>
+      <div class="repoMeta"><span>por <b>${d.owner.login}</b></span><span>⭐ ${(d.stargazers_count||0).toLocaleString('pt-BR')}</span>${d.language?`<span>● ${d.language}</span>`:''}</div>
+      ${d.description?`<div class="repoDesc">${d.description}</div>`:''}`;
+    navRepo('');
+  }catch(e){
+    document.getElementById('repoTop').innerHTML=`<div class="loading">não deu pra carregar agora (repo privado ou limite da API do GitHub atingido).<br><a href="${url}" target="_blank" style="color:var(--cyan)">abrir no GitHub →</a></div>`;
+  }
+}
+async function navRepo(path){
+  const r=curRepo;if(!r)return;
+  const list=document.getElementById('repoList');
+  list.innerHTML='<div class="loading">carregando...</div>';
+  const parts=path?path.split('/'):[];
+  let cb=`<a onclick="navRepo('')">${r.repo}</a>`,acc='';
+  parts.forEach((p,i)=>{acc+=(i?'/':'')+p;const a=acc;cb+=` / <a onclick="navRepo('${a}')">${p}</a>`;});
+  document.getElementById('crumb').innerHTML=cb;
+  try{
+    const res=await fetch(`https://api.github.com/repos/${r.owner}/${r.repo}/contents/${path}`);
+    if(!res.ok)throw new Error();
+    let items=await res.json();if(!Array.isArray(items))items=[items];
+    items.sort((a,b)=>(a.type>b.type?1:a.type<b.type?-1:0)||a.name.localeCompare(b.name));
+    list.innerHTML=items.map(it=>it.type==='dir'
+      ? `<div class="rrow dir" onclick="navRepo('${it.path}')"><span class="ri">▸</span><span class="rl">${it.name}/</span></div>`
+      : `<a class="rrow file" href="${it.html_url}" target="_blank" rel="noopener"><span class="ri">•</span><span class="rl">${it.name}</span><span style="color:var(--muted)">↗</span></a>`
+    ).join('')||'<div class="loading">pasta vazia</div>';
+  }catch(e){list.innerHTML='<div class="loading">não consegui listar o conteúdo (limite da API do GitHub).</div>';}
+}
+function closeRepo(){document.getElementById('repoOv').classList.remove('show');}
+
+// --- edição de item (só admin) ---
+let editId=null, editTipo='video';
+function setEt(el,t){document.querySelectorAll('[data-et]').forEach(c=>c.classList.remove('active'));el.classList.add('active');editTipo=t;}
+function editarItem(id){
+  const it=itens.find(x=>x.id===id);if(!it)return;
+  editId=id;editTipo=it.tipo||'video';
+  document.getElementById('eTitle').value=it.titulo||'';
+  document.querySelectorAll('[data-et]').forEach(c=>c.classList.toggle('active',c.dataset.et===editTipo));
+  document.getElementById('eArea').value=it.area||'';
+  document.getElementById('editOv').classList.add('show');
+}
+function closeEdit(){document.getElementById('editOv').classList.remove('show');editId=null;}
+function salvarEdicao(){
+  if(!editId)return;
+  const titulo=document.getElementById('eTitle').value.trim()||'Sem título';
+  const area=document.getElementById('eArea').value||null;
+  if(USA_FIREBASE&&fb){
+    fb.fs.updateDoc(fb.fs.doc(fb.db,'conteudos',editId),{titulo,area,tipo:editTipo}).catch(e=>alert(e.message));
+  }else{
+    const it=itens.find(x=>x.id===editId);if(it){it.titulo=titulo;it.area=area;it.tipo=editTipo;}
+    render();
+  }
+  closeEdit();
+}
+
+// --- acervo inicial pra importar (lote 1 + lote 2 + perfil). Anti-duplicata por URL. ---
+const codesNovos=["ZS4E9fRGw","ZS4E9fubt","ZS4E9C9K3","ZS4E9DCCr","ZS4E9HGkk","ZS4E94qAT","ZS4E9fvRM","ZS4ExR4Tb","ZS4Ex2q4h","ZS4ExdB4u","ZS4E9Kc4f","ZS4Ex8Ca4","ZS4ExYoyX","ZS4ExjrhW","ZS4E9oRAf","ZS4E9W6tB","ZS4E9Wm4o","ZS4E9T8pK","ZS4E97nUb","ZS4ExdUuD","ZS4E9Kme9","ZS4E9cxY8","ZS4ExPcuh","ZS4ExkYn9","ZS4ExAxXW","ZS4Ex5wgD","ZS4Exm7g3","ZS4Ex5xy5","ZS4ExH6hY","ZS4ExqN3t","ZS4Exo76v","ZS4Exgopn","ZS4ExG29s","ZS4ExncKx","ZS4ExGXkg","ZS4Exnowo","ZS4Exo7s7","ZS4EQ178N","ZS4EQ1etu","ZS4ExG8sG","ZS4ExbQJh","ZS4ExEcf9","ZS4Extg9R","ZS4ExpDEm","ZS4EQAp4F","ZS4EQhmc7","ZS4EQk64w","ZS4EQfujC","ZS4ECeBKx","ZS4ECU3N1","ZS4ECFFBV"];
+const tk=(c,titulo,area)=>({url:'https://vt.tiktok.com/'+c+'/',tipo:'video',plataforma:'tiktok',titulo:titulo||'TikTok · programação',area:area||null});
+const IMPORTAR=[
+  ...codes.map(c=>tk(c)),
+  ...codesNovos.map(c=>tk(c)),
+  tk('ZS4ExEEGG','⭐ Destaque — um dos mais importantes'),
+  tk('ZS4EQD9js','Versão Full-Stack','Back-end'),
+  tk('ZS4EQURFa','⭐ Importante'),
+  tk('ZS4ECkfKR','Professor de cibersegurança','Segurança'),
+  {url:'https://linktr.ee/pedro__neres',tipo:'perfil',plataforma:'linktree',titulo:'Pedro Neres — criador de TI',area:null},
+  // livros de TI legalmente gratuitos (leitura oficial)
+  {url:'https://eloquentjavascript.net/',tipo:'livro',plataforma:'livro',titulo:'Eloquent JavaScript',autor:'Marijn Haverbeke',gratis:true,area:'Front-end'},
+  {url:'https://git-scm.com/book/pt-br/v2',tipo:'livro',plataforma:'livro',titulo:'Pro Git',autor:'Chacon & Straub',gratis:true,area:'DevOps'},
+  {url:'https://doc.rust-lang.org/book/',tipo:'livro',plataforma:'livro',titulo:'The Rust Programming Language',autor:'Klabnik & Nichols',gratis:true,area:'Back-end'},
+  {url:'https://automatetheboringstuff.com/',tipo:'livro',plataforma:'livro',titulo:'Automate the Boring Stuff',autor:'Al Sweigart',gratis:true,area:'Fundamentos'},
+  {url:'https://github.com/getify/You-Dont-Know-JS',tipo:'livro',plataforma:'livro',titulo:"You Don't Know JS Yet",autor:'Kyle Simpson',gratis:true,area:'Front-end'},
+  // repositórios úteis de TI
+  {url:'https://github.com/kamranahmedse/developer-roadmap',tipo:'repo',plataforma:'github',titulo:'developer-roadmap',autor:'kamranahmedse',area:'Carreira'},
+  {url:'https://github.com/EbookFoundation/free-programming-books',tipo:'repo',plataforma:'github',titulo:'free-programming-books',autor:'EbookFoundation',area:'Fundamentos'},
+  {url:'https://github.com/practical-tutorials/project-based-learning',tipo:'repo',plataforma:'github',titulo:'project-based-learning',autor:'practical-tutorials',area:'Fundamentos'},
+  {url:'https://github.com/donnemartin/system-design-primer',tipo:'repo',plataforma:'github',titulo:'system-design-primer',autor:'donnemartin',area:'Back-end'},
+];
+
+async function importarLote(){
+  if(!(USA_FIREBASE&&fb&&adminLogado)){alert('Entre no modo admin (logado) com o Firebase conectado antes de importar.');return;}
+  if(!confirm('Importar '+IMPORTAR.length+' itens? Os que já estão no acervo são ignorados — não duplica.'))return;
+  const btn=document.getElementById('importBtn');btn.disabled=true;btn.textContent='verificando o que já existe...';
+  const existentes=new Set();
+  try{const snap=await fb.fs.getDocs(fb.fs.collection(fb.db,'conteudos'));snap.forEach(d=>{const u=d.data().url;if(u)existentes.add(u);});}
+  catch(e){console.error(e);}
+  let ok=0,pulados=0;
+  for(const it of IMPORTAR){
+    if(existentes.has(it.url)){pulados++;continue;}
+    try{
+      const ref=await fb.fs.addDoc(fb.fs.collection(fb.db,'conteudos'),{tipo:it.tipo,plataforma:it.plataforma,url:it.url,titulo:it.titulo,area:it.area,autor:it.autor||null,gratis:(it.gratis??null),status:'pendente',criadoEm:Date.now()});
+      await fb.fs.updateDoc(ref,{status:'aprovado'});
+      ok++;btn.textContent='importando... '+ok+' novos';
+    }catch(e){console.error('falhou:',it.url,e);}
+  }
+  btn.textContent='✓ '+ok+' adicionados'+(pulados?(' · '+pulados+' já existiam'):'');
+  setTimeout(()=>{btn.disabled=false;btn.textContent='＋ importar meus vídeos do TikTok';},6000);
+}
+
+async function initBackend(){
+  if(!USA_FIREBASE)return; // modo demonstração: mantém os dados de exemplo em memória
+  try{
+    const appMod=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+    const fs=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    const au=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+    const app=appMod.initializeApp(firebaseConfig);
+    fb={db:fs.getFirestore(app),auth:au.getAuth(app),fs,au,_unsub:null};
+    // acervo público (aprovados), em tempo real
+    itens=[];render();
+    const qAprov=fs.query(fs.collection(fb.db,'conteudos'),fs.where('status','==','aprovado'));
+    fs.onSnapshot(qAprov,snap=>{itens=snap.docs.map(d=>({id:d.id,...d.data()}));render();});
+    // quando o admin loga, escuta a fila de pendentes
+    au.onAuthStateChanged(fb.auth,user=>{
+      adminLogado=!!(user&&(!EMAIL_ADMIN||user.email===EMAIL_ADMIN));
+      if(adminLogado&&!fb._unsub){
+        const qPend=fs.query(fs.collection(fb.db,'conteudos'),fs.where('status','==','pendente'));
+        fb._unsub=fs.onSnapshot(qPend,snap=>{pendentes=snap.docs.map(d=>({id:d.id,...d.data()}));renderQueue();});
+      }
+    });
+  }catch(e){console.error('Falha ao conectar no Firebase:',e);alert('Não consegui conectar no Firebase. Confira as credenciais no topo do arquivo.');}
+}
+
+render();renderQueue();initBackend();
+</script>
+</body>
+</html>
