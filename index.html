@@ -95,7 +95,26 @@ header{
 }
 .hero-title .g1{background:linear-gradient(100deg,var(--lime),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .hero-title .g2{color:var(--txt)}
-.hero-sub{max-width:560px;margin:20px auto 0;color:var(--muted);font-size:clamp(15px,3.6vw,18px);line-height:1.55}
+.hero-sub{max-width:560px;margin:16px auto 0;color:var(--muted);font-size:clamp(14px,3.4vw,17px);line-height:1.55}
+/* logo ML animada + nome */
+.mlwrap{display:flex;justify-content:center;margin-bottom:6px}
+svg.mllogo{width:clamp(96px,26vw,140px);height:auto;filter:drop-shadow(0 0 10px rgba(198,255,58,.5));animation:glowpulse 3.2s ease-in-out 1.6s infinite}
+.ml-m,.ml-l{fill:none;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.ml-m{stroke:url(#gml);animation:draw 1s ease .1s forwards}
+.ml-l{stroke:var(--cyan);animation:draw .7s ease .9s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes glowpulse{0%,100%{filter:drop-shadow(0 0 8px rgba(198,255,58,.4))}50%{filter:drop-shadow(0 0 22px rgba(46,230,255,.6))}}
+.myname{
+  font-family:'Unbounded',sans-serif;font-weight:800;letter-spacing:.02em;
+  font-size:clamp(26px,7vw,46px);line-height:1;margin-bottom:22px;
+  background:linear-gradient(100deg,var(--lime),var(--cyan) 60%,var(--pink));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:fadeup .7s ease 1.1s both;
+}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.hero-title2{font-family:'Unbounded',sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.02;font-size:clamp(24px,5.6vw,40px);text-transform:lowercase;margin-top:6px}
+.hero-title2 .g1{background:linear-gradient(100deg,var(--lime),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-title2 .g2{color:var(--txt)}
 .searchwrap{max-width:620px;margin:30px auto 0;position:relative}
 .searchwrap input{
   width:100%;background:rgba(15,18,27,.8);border:1.5px solid var(--line);border-radius:16px;
@@ -154,8 +173,20 @@ header{
 .thumb.book .bk{font-size:38px}
 .thumb.repo{background:linear-gradient(150deg,#101520,#0a0d14)}
 .thumb.repo .gh{font-size:42px;color:#c9d1d9}
-.thumb.perfil{background:linear-gradient(150deg,#1a0a20,#0c0810)}
+.thumb.perfil{background:linear-gradient(150deg,#160a20,#0a0810)}
 .thumb.perfil .pg{font-size:44px}
+/* avatar de criador */
+.avatarwrap{position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.15);box-shadow:0 0 22px rgba(255,63,180,.35)}
+.avatar.mono-av{display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-weight:800;font-size:34px;color:#07080d;background:linear-gradient(135deg,var(--lime),var(--cyan),var(--pink))}
+.socrow{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+.soc{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:9px 6px;border-radius:10px;border:1px solid var(--line);text-decoration:none;transition:.15s}
+.soc.yt{color:var(--red);border-color:rgba(255,91,110,.3)}
+.soc.yt:hover{background:var(--red);color:#07080d}
+.soc.ig{color:var(--pink);border-color:rgba(255,63,180,.3)}
+.soc.ig:hover{background:var(--pink);color:#07080d}
+.soc.tk{color:var(--cyan);border-color:rgba(46,230,255,.3)}
+.soc.tk:hover{background:var(--cyan);color:#07080d}
 .pf{position:absolute;top:11px;left:11px;z-index:3;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;padding:5px 9px;border-radius:7px;text-transform:uppercase;backdrop-filter:blur(6px)}
 .pf.tiktok{background:rgba(46,230,255,.14);color:var(--cyan);border:1px solid rgba(46,230,255,.4)}
 .pf.youtube{background:rgba(255,91,110,.14);color:var(--red);border:1px solid rgba(255,91,110,.4)}
@@ -260,6 +291,8 @@ header{
 .field input:focus,.field select:focus{outline:none;border-color:var(--cyan);box-shadow:var(--glow-cyan)}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
 .seg .chip{flex:1;text-align:center}
+.modeseg{display:flex;gap:8px;margin-bottom:16px}
+.modeseg .chip{flex:1;text-align:center;padding:10px}
 .submit{width:100%;margin-top:8px;background:linear-gradient(100deg,var(--lime),var(--cyan));color:#07080d;font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px;border:none;border-radius:14px;padding:16px;cursor:pointer;transition:.2s;box-shadow:0 6px 24px rgba(198,255,58,.3)}
 .submit:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .moreBtn{width:100%;margin-top:10px;background:transparent;border:1px dashed var(--line);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;padding:12px;border-radius:12px;cursor:pointer;transition:.15s}
@@ -322,8 +355,21 @@ header{
 </header>
 
 <section class="hero">
+  <div class="mlwrap">
+    <svg class="mllogo" viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg" aria-label="Murilo Lemos">
+      <defs>
+        <linearGradient id="gml" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#c6ff3a"/>
+          <stop offset="100%" stop-color="#2ee6ff"/>
+        </linearGradient>
+      </defs>
+      <path class="ml-m" pathLength="1" d="M20 94 L20 38 L50 74 L80 38 L80 94"/>
+      <path class="ml-l" pathLength="1" d="M80 94 L112 94"/>
+    </svg>
+  </div>
+  <div class="myname">Murilo Lemos</div>
   <div class="eyebrow">⚡ acervo colaborativo de TI</div>
-  <h1 class="hero-title"><span class="g1">todo o código</span><br><span class="g2">num lugar só</span></h1>
+  <h2 class="hero-title2"><span class="g1">todo o código</span> <span class="g2">num lugar só</span></h2>
   <p class="hero-sub">vídeos, livros, repositórios e criadores de tecnologia. qualquer pessoa adiciona, é só colar um link.</p>
   <div class="searchwrap">
     <span class="ic">⌕</span>
@@ -368,32 +414,45 @@ header{
   <div class="sheet" style="position:relative">
     <button class="close" onclick="closeModal()">×</button>
     <div id="formBox">
-      <h2>Achou um conteúdo bom de TI?</h2>
-      <p class="hint mono">qualquer pessoa pode adicionar — é só colar o link. entra na fila e aparece depois de aprovado.</p>
-      <div class="field bigurl">
-        <label>link do vídeo ou livro</label>
-        <input id="fUrl" placeholder="cole aqui — TikTok, YouTube, Instagram..." oninput="document.getElementById('dupWarn').style.display='none';this.style.borderColor=''">
+      <h2>Adicionar ao acervo</h2>
+      <p class="hint mono">qualquer pessoa pode adicionar. entra na fila e aparece depois de aprovado.</p>
+      <div class="modeseg">
+        <button class="chip active" id="mc0" onclick="setModo('conteudo')">conteúdo</button>
+        <button class="chip" id="mc1" onclick="setModo('criador')">criador</button>
       </div>
-      <div id="dupWarn" style="display:none;margin:-6px 0 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);line-height:1.5">⚠ esse link já está no acervo — não precisa adicionar de novo.</div>
-      <button class="submit" onclick="submitItem()">enviar →</button>
-      <button class="moreBtn" onclick="toggleDetalhes()" id="moreBtn">＋ dar um título e escolher a área (opcional)</button>
-      <div id="detalhes" style="display:none;margin-top:16px">
-        <div class="field">
-          <label>título · opcional</label>
-          <input id="fTitle" placeholder="ex: 3 comandos Git essenciais">
+      <div id="modoConteudo">
+        <div class="field bigurl">
+          <label>link do vídeo ou livro</label>
+          <input id="fUrl" placeholder="cole aqui: TikTok, YouTube, Instagram, GitHub..." oninput="document.getElementById('dupWarn').style.display='none';this.style.borderColor=''">
         </div>
-        <div class="field">
-          <label>tipo</label>
-          <div class="seg">
-            <button class="chip active" data-ft="video" onclick="setFt(this,'video')">vídeo</button>
-            <button class="chip" data-ft="livro" onclick="setFt(this,'livro')">livro</button>
+        <div id="dupWarn" style="display:none;margin:-6px 0 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);line-height:1.5">⚠ esse link já está no acervo, não precisa adicionar de novo.</div>
+        <button class="moreBtn" onclick="toggleDetalhes()" id="moreBtn">＋ dar um título e escolher a área (opcional)</button>
+        <div id="detalhes" style="display:none;margin-top:16px">
+          <div class="field">
+            <label>título · opcional</label>
+            <input id="fTitle" placeholder="ex: 3 comandos Git essenciais">
+          </div>
+          <div class="field">
+            <label>tipo</label>
+            <div class="seg">
+              <button class="chip active" data-ft="video" onclick="setFt(this,'video')">vídeo</button>
+              <button class="chip" data-ft="livro" onclick="setFt(this,'livro')">livro</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>área · opcional</label>
+            <select id="fArea"></select>
           </div>
         </div>
-        <div class="field">
-          <label>área · opcional</label>
-          <select id="fArea"></select>
-        </div>
       </div>
+      <div id="modoCriador" style="display:none">
+        <div class="field"><label>nome do criador</label><input id="cNome" placeholder="ex: Fabio Akita"></div>
+        <div class="field"><label>link do YouTube</label><input id="cYt" placeholder="https://youtube.com/@..."></div>
+        <div class="field"><label>link do Instagram</label><input id="cIg" placeholder="https://instagram.com/..."></div>
+        <div class="field"><label>link do TikTok</label><input id="cTk" placeholder="https://tiktok.com/@..."></div>
+        <p class="hint mono" style="margin-bottom:4px">a foto aparece sozinha a partir do link do canal. basta um dos links.</p>
+      </div>
+      <button class="submit" onclick="submitItem()">enviar →</button>
     </div>
     <div id="okBox" style="display:none">
       <div class="okmsg">✓ enviado!<br>seu conteúdo está na fila de aprovação.<br>assim que um moderador aprovar, ele aparece no acervo.</div>
@@ -484,7 +543,18 @@ const repos=[
   {id:'r2',tipo:'repo',plataforma:'github',titulo:'public-apis',autor:'public-apis',area:'Back-end',url:'https://github.com/public-apis/public-apis'},
 ];
 
-let itens=[...videos,...repos,...livros];
+// --- criadores de conteúdo de TI (4 BR + 3 internacionais). Foto puxada do canal (og:image). ---
+const criadores=[
+  {id:'c1',tipo:'perfil',plataforma:'perfil',area:'Carreira',titulo:'Gustavo Guanabara',url:'https://www.youtube.com/cursoemvideo',youtube:'https://www.youtube.com/cursoemvideo',instagram:'https://www.instagram.com/gustavoguanabara/',tiktok:'https://www.tiktok.com/@cursoemvideo'},
+  {id:'c2',tipo:'perfil',plataforma:'perfil',area:'Carreira',titulo:'Filipe Deschamps',url:'https://www.youtube.com/FilipeDeschamps',youtube:'https://www.youtube.com/FilipeDeschamps',instagram:'https://www.instagram.com/filipedeschamps/'},
+  {id:'c3',tipo:'perfil',plataforma:'perfil',area:'Back-end',titulo:'Fabio Akita',url:'https://www.youtube.com/@Akitando',youtube:'https://www.youtube.com/@Akitando',instagram:'https://www.instagram.com/akitaonrails/'},
+  {id:'c4',tipo:'perfil',plataforma:'perfil',area:'Back-end',titulo:'Rodrigo Branas',url:'https://www.youtube.com/rodrigobranas',youtube:'https://www.youtube.com/rodrigobranas',instagram:'https://www.instagram.com/rodrigobranas/'},
+  {id:'c5',tipo:'perfil',plataforma:'perfil',area:'Front-end',titulo:'Fireship',url:'https://www.youtube.com/@Fireship',youtube:'https://www.youtube.com/@Fireship',tiktok:'https://www.tiktok.com/@fireship_dev'},
+  {id:'c6',tipo:'perfil',plataforma:'perfil',area:'Front-end',titulo:'Traversy Media',url:'https://www.youtube.com/TraversyMedia',youtube:'https://www.youtube.com/TraversyMedia',instagram:'https://www.instagram.com/traversymedia/'},
+  {id:'c7',tipo:'perfil',plataforma:'perfil',area:'Back-end',titulo:'ThePrimeagen',url:'https://www.youtube.com/@ThePrimeagen',youtube:'https://www.youtube.com/@ThePrimeagen'},
+];
+
+let itens=[...videos,...criadores,...repos,...livros];
 let pendentes=[
   {id:'p1',tipo:'video',plataforma:'youtube',url:'https://youtube.com/watch?v=exemplo',titulo:'Entendendo APIs REST em 10 min',area:'Back-end'}
 ];
@@ -551,9 +621,17 @@ function cardHTML(it){
     sub=it.autor?('por '+it.autor):'repositório';
     mainBtn=`<button class="btn" onclick="openRepo('${it.url}')">explorar conteúdo →</button>`;
   }else if(it.tipo==='perfil'){
-    thumb=`<div class="thumb perfil${hi}">${cover}<span class="pg">🔗</span><span class="pf linktree">${it.plataforma||'perfil'}</span></div>`;
-    sub='criador de conteúdo';
-    mainBtn=`<a class="btn" href="${it.url}" target="_blank" rel="noopener">abrir perfil →</a>`;
+    const ini=(it.titulo||'?').replace(/[^\p{L}\s]/gu,'').trim().split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase()||'?';
+    const av=it.image?`<img class="avatar" src="${it.image}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=\\'avatar mono-av\\'>${ini}</div>'">`:`<div class="avatar mono-av">${ini}</div>`;
+    thumb=`<div class="thumb perfil"><div class="avatarwrap">${av}</div><span class="pf linktree">criador</span></div>`;
+    sub='criador de conteúdo de TI';
+    const socs=[];
+    if(it.youtube)socs.push(`<a class="soc yt" href="${it.youtube}" target="_blank" rel="noopener">▶ YT</a>`);
+    if(it.instagram)socs.push(`<a class="soc ig" href="${it.instagram}" target="_blank" rel="noopener">◎ IG</a>`);
+    if(it.tiktok)socs.push(`<a class="soc tk" href="${it.tiktok}" target="_blank" rel="noopener">♪ TT</a>`);
+    if(!socs.length&&it.url)socs.push(`<a class="soc tk" href="${it.url}" target="_blank" rel="noopener">abrir perfil →</a>`);
+    const socrow=`<div class="socrow">${socs.join('')}</div>`;
+    return `<div class="card">${thumb}<div class="body"><h3>${it.titulo}</h3><span class="sub mono">${sub}</span>${socrow}${(ed||rm)?`<div class="actions">${ed}${rm}</div>`:''}</div></div>`;
   }else{
     thumb=`<div class="thumb${hi}">${cover}<span class="play">▶</span><span class="pf ${it.plataforma}">${it.plataforma}</span></div>`;
     sub='toque em assistir';
@@ -611,8 +689,10 @@ function openModal(){document.getElementById('overlay').classList.add('show');do
 function closeModal(){
   document.getElementById('overlay').classList.remove('show');
   document.getElementById('fUrl').value='';document.getElementById('fTitle').value='';
+  ['cNome','cYt','cIg','cTk'].forEach(id=>{const e=document.getElementById(id);if(e){e.value='';e.style.borderColor='';}});
   document.getElementById('detalhes').style.display='none';
   document.getElementById('moreBtn').textContent='＋ dar um título e escolher a área (opcional)';
+  setModo('conteudo');
 }
 // busca título, autor e imagem de um link (via função do Netlify; no modo demo retorna null)
 async function buscarMeta(url){
@@ -623,7 +703,35 @@ async function buscarMeta(url){
     return d&&!d.error?d:null;
   }catch(e){return null;}
 }
+let addModo='conteudo';
+function setModo(m){
+  addModo=m;
+  document.getElementById('mc0').classList.toggle('active',m==='conteudo');
+  document.getElementById('mc1').classList.toggle('active',m==='criador');
+  document.getElementById('modoConteudo').style.display=m==='conteudo'?'block':'none';
+  document.getElementById('modoCriador').style.display=m==='criador'?'block':'none';
+}
+
 async function submitItem(){
+  // modo criador: nome + links do YouTube/Instagram/TikTok
+  if(addModo==='criador'){
+    const nome=document.getElementById('cNome').value.trim();
+    const yt=document.getElementById('cYt').value.trim();
+    const ig=document.getElementById('cIg').value.trim();
+    const tk=document.getElementById('cTk').value.trim();
+    if(!nome){document.getElementById('cNome').style.borderColor='var(--red)';return;}
+    if(!yt&&!ig&&!tk){document.getElementById('cYt').style.borderColor='var(--red)';return;}
+    const prim=yt||ig||tk;
+    document.getElementById('formBox').style.display='none';
+    document.getElementById('okBox').style.display='block';
+    const meta=await buscarMeta(prim);
+    const obj={tipo:'perfil',plataforma:'perfil',url:prim,titulo:nome,
+      youtube:yt||null,instagram:ig||null,tiktok:tk||null,
+      image:(meta&&meta.image)||null,area:null,status:'pendente',criadoEm:Date.now()};
+    if(USA_FIREBASE&&fb){fb.fs.addDoc(fb.fs.collection(fb.db,'conteudos'),obj).catch(e=>alert('Erro ao enviar: '+e.message));}
+    else{pendentes.unshift({id:'p'+Date.now(),...obj});renderQueue();}
+    return;
+  }
   const url=document.getElementById('fUrl').value.trim();
   const tituloManual=document.getElementById('fTitle').value.trim();
   if(!url){document.getElementById('fUrl').style.borderColor='var(--red)';return;}
@@ -707,7 +815,7 @@ async function enriquecer(){
   if(!(USA_FIREBASE&&fb&&adminLogado)){alert('Entre no modo admin (logado) antes de buscar as capas.');return;}
   const btn=document.getElementById('enrichBtn');btn.disabled=true;btn.textContent='procurando itens...';
   let docs=[];
-  try{const snap=await fb.fs.getDocs(fb.fs.collection(fb.db,'conteudos'));docs=snap.docs.filter(d=>!d.data().image);}
+  try{const snap=await fb.fs.getDocs(fb.fs.collection(fb.db,'conteudos'));docs=snap.docs.filter(d=>{const dt=d.data();return !dt.image || /sem título|a definir|TikTok · programa/i.test(dt.titulo||'');});}
   catch(e){alert(e.message);btn.disabled=false;return;}
   if(!docs.length){btn.textContent='✓ tudo já tem capa';setTimeout(()=>{btn.disabled=false;btn.textContent='🖼 buscar títulos e capas';},4000);return;}
   let ok=0;
@@ -774,6 +882,8 @@ const IMPORTAR=[
   {url:'https://github.com/EbookFoundation/free-programming-books',tipo:'repo',plataforma:'github',titulo:'free-programming-books',autor:'EbookFoundation',area:'Fundamentos'},
   {url:'https://github.com/practical-tutorials/project-based-learning',tipo:'repo',plataforma:'github',titulo:'project-based-learning',autor:'practical-tutorials',area:'Fundamentos'},
   {url:'https://github.com/donnemartin/system-design-primer',tipo:'repo',plataforma:'github',titulo:'system-design-primer',autor:'donnemartin',area:'Back-end'},
+  // criadores de conteúdo de TI
+  ...criadores.map(c=>({url:c.url,tipo:'perfil',plataforma:'perfil',titulo:c.titulo,area:c.area,youtube:c.youtube,instagram:c.instagram,tiktok:c.tiktok})),
 ];
 
 async function importarLote(){
@@ -787,7 +897,7 @@ async function importarLote(){
   for(const it of IMPORTAR){
     if(existentes.has(it.url)){pulados++;continue;}
     try{
-      const ref=await fb.fs.addDoc(fb.fs.collection(fb.db,'conteudos'),{tipo:it.tipo,plataforma:it.plataforma,url:it.url,titulo:it.titulo,area:it.area,autor:it.autor||null,gratis:(it.gratis??null),status:'pendente',criadoEm:Date.now()});
+      const ref=await fb.fs.addDoc(fb.fs.collection(fb.db,'conteudos'),{tipo:it.tipo,plataforma:it.plataforma,url:it.url,titulo:it.titulo,area:it.area,autor:it.autor||null,gratis:(it.gratis??null),youtube:it.youtube||null,instagram:it.instagram||null,tiktok:it.tiktok||null,status:'pendente',criadoEm:Date.now()});
       await fb.fs.updateDoc(ref,{status:'aprovado'});
       ok++;btn.textContent='importando... '+ok+' novos';
     }catch(e){console.error('falhou:',it.url,e);}
